@@ -2,18 +2,19 @@ package com.company;
 
 public interface IntList {
 
-    int add(int item);
-    int add(int index, int item);
-    int set(int index, int item);
-    int removeIt(int item);
-    int remove(int index);
-    boolean contains(int item);
-    int indexOf(int item);
-    int lastIndexOf(int item);
-    int get(int index);
+    Integer add(Integer item);
+    Integer add(int index, Integer item);
+    Integer set(int index, Integer item);
+    Integer removeIt(Integer item);
+    Integer remove(int index);
+    boolean contains(Integer item);
+    Integer indexOf(Integer item);
+    Integer lastIndexOf(Integer item);
+    Integer get(int index);
     boolean equals(IntList otherList);
     int size();
     boolean isEmpty();
     void clear();
-    int[] toArray();
+    Integer[] toArray();
+    Integer[] generateArray();
 }

@@ -6,7 +6,7 @@ public class Main {
 
         IntList intList = new IntListImpl();
 
-        int[] list = {5, 9, 8, 10, 4, 50, 36};
+        Integer[] list = intList.generateArray();
 
         System.out.println(intList.contains(100_001));
 

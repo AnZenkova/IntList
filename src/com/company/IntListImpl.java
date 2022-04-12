@@ -1,16 +1,21 @@
 package com.company;
 
 import java.util.Arrays;
+import java.util.Objects;
 
-public class IntListImpl<start> implements IntList{
+public class IntListImpl<E> implements IntList{
 
-    private final int[] array = generateRandomArray();
-    private final int size = size();
+    private Integer[] array = new Integer[10];
+    private int size = size();
 
+    public Integer[] generateArray() { // создаю публичный т.к. хочу сделать проверку в мейне.
+        Integer[] arr = generateRandomArray();
+        return arr;
+    }
 
-    private static int[] generateRandomArray() {
+    private static Integer[] generateRandomArray() {
         java.util.Random random = new java.util.Random();
-        int[] arr = new int[100_000];
+        Integer[] arr = new Integer[100_000];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = random.nextInt(100_000) + 100_000;
         }
@@ -18,28 +23,28 @@ public class IntListImpl<start> implements IntList{
     }
 
     @Override
-    public int add(int item) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == 0) {
-                array[i] = item;
-                return array[i];
-            }
+    public Integer add(Integer item) {
+        if (size == array.length) {
+            return Integer.parseInt("Массив уже заполнен элементами");
         }
-        return Integer.parseInt("Массив уже заполнен элементами");
+        array[size] = item;
+        size++;
+        return array[size];
     }
 
     @Override
-    public int add(int index, int item) {
+    public Integer add(int index, Integer item) {
         if (index >= array.length) {
             throw new IndexLargerSizeOfArrayException("Значение индекса " + index + " больше чем размер массива!");
         } else {
             array[index] = item;
+            size++;
         }
         return item;
     }
 
     @Override
-    public int set(int index, int item) {
+    public Integer set(int index, Integer item) {
         if (index >= array.length) {
             throw new IndexLargerSizeOfArrayException("Значение индекса " + index + " больше чем размер массива!");
         } else if (array[index] == 0) {
@@ -51,10 +56,11 @@ public class IntListImpl<start> implements IntList{
     }
 
     @Override
-    public int removeIt(int item) {
+    public Integer removeIt(Integer item) {
         for (int i = 0; i < array.length; i++) {
             if (array[i] == item) {
                 array[i] = 0;
+                size--;
                 return Integer.parseInt(item + ": Удален");
             }
         }
@@ -62,21 +68,23 @@ public class IntListImpl<start> implements IntList{
     }
 
     @Override
-    public int remove(int index) {
+    public Integer remove(int index) {
         int number;
         if (array[index] == 0) {
             throw new NullElementInTheArray("В ячейке под индесом " + index + " null");
         } else {
             number = array[index];
             array[index] = 0;
+            size--;
         }
         return Integer.parseInt("Элемент: " + number + " под индексом " + index + " удален");
     }
 
     @Override
-    public boolean contains(int item) {
-        sort(array);
-        int element = searchBin(array, item);
+    public boolean contains(Integer item) {
+        Integer[] arr = array;
+        sort(arr);
+        Integer element = searchBin(array, item);
         if (element != 0) {
             return true;
         } else {
@@ -85,7 +93,7 @@ public class IntListImpl<start> implements IntList{
     }
 
     @Override
-    public int indexOf(int item) {
+    public Integer indexOf(Integer item) {
         for (int i = 0; i < array.length; i++) {
             if (array[i] == item) {
                 return i;
@@ -95,7 +103,7 @@ public class IntListImpl<start> implements IntList{
     }
 
     @Override
-    public int lastIndexOf(int item) {
+    public Integer lastIndexOf(Integer item) {
         for (int i = array.length; i >= 0; i--) {
             if (array[i - 1] == item) {
                 return i - 1;
@@ -105,7 +113,7 @@ public class IntListImpl<start> implements IntList{
     }
 
     @Override
-    public int get(int index){
+    public Integer get(int index){
         if (array[index] == 0) {
             throw new NullElementInTheArray("В ячейке под индексом " + index + " объект отсутствует");
         } else {
@@ -126,6 +134,9 @@ public class IntListImpl<start> implements IntList{
                 if (array[i] == otherList.get(i)) {
                     eL++;
                 }
+            }
+            if (eL == size) {
+                return result;
             }
         }
         return result;
@@ -152,15 +163,16 @@ public class IntListImpl<start> implements IntList{
         for (int i = 0; i < array.length; i++) {
             array[i] = 0;
         }
+        size = 0;
     }
 
     @Override
-    public int[] toArray() {
-        int[] array = new int[10];
+    public Integer[] toArray() {
+        Integer[] array = new Integer[10];
         return array;
     }
 
-    private void sort(int[] arr) {
+    private void sort(Integer[] arr) {
         for (int i = arr.length - 1; i > 0; i--) {
             int maxEl = Integer.MIN_VALUE;
             int index = 0;
@@ -176,7 +188,7 @@ public class IntListImpl<start> implements IntList{
         }
     }
 
-    private int searchBin(int[] array, int element) {
+    private int searchBin(Integer[] array, int element) {
         int min = 0;
         int max = array.length - 1;
         while (min <= max) {
@@ -191,5 +203,20 @@ public class IntListImpl<start> implements IntList{
             }
         }
         return Integer.parseInt("Данный элемент, не найден");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IntListImpl<?> intList = (IntListImpl<?>) o;
+        return size == intList.size && Arrays.equals(array, intList.array);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(size);
+        result = 31 * result + Arrays.hashCode(array);
+        return result;
     }
 }
