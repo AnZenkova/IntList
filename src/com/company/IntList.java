@@ -17,4 +17,5 @@ public interface IntList {
     void clear();
     Integer[] toArray();
     Integer[] generateArray();
+    String comparisonOfSort();
 }

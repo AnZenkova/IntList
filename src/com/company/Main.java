@@ -6,14 +6,13 @@ public class Main {
 
         IntList intList = new IntListImpl();
 
+        intList.add(3);
+        intList.add(10);
+
         Integer[] list = intList.generateArray();
 
-        System.out.println(intList.contains(100_001));
 
-
-        long start = System.currentTimeMillis();
-        intList.contains(100_001);
-        System.out.println(System.currentTimeMillis() - start);
+        System.out.println(intList.comparisonOfSort());
 
     }
 }

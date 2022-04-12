@@ -144,12 +144,6 @@ public class IntListImpl<E> implements IntList{
 
     @Override
     public int size() {
-        int size = 0;
-        for (int s : array) {
-            if (s != 0) {
-                size++;
-            }
-        }
         return size;
     }
 
@@ -188,7 +182,7 @@ public class IntListImpl<E> implements IntList{
         }
     }
 
-    private int searchBin(Integer[] array, int element) {
+    private Integer searchBin(Integer[] array, int element) {
         int min = 0;
         int max = array.length - 1;
         while (min <= max) {
@@ -205,18 +199,22 @@ public class IntListImpl<E> implements IntList{
         return Integer.parseInt("Данный элемент, не найден");
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        IntListImpl<?> intList = (IntListImpl<?>) o;
-        return size == intList.size && Arrays.equals(array, intList.array);
-    }
+    public String comparisonOfSort() {
 
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(size);
-        result = 31 * result + Arrays.hashCode(array);
-        return result;
+        Integer[] arr = generateRandomArray();
+        Integer[] arr2 = arr;
+        long start = System.currentTimeMillis();
+        sort(arr);
+        long a = System.currentTimeMillis() - start;
+
+        long start1 = System.currentTimeMillis();
+        Arrays.sort(arr2);
+        long b = System.currentTimeMillis() - start1;
+
+        if (a > b) {
+            return "Arrays.sort() " + b + " быстрее чем sort() " + a;
+        } else {
+            return "sort() " + a + " быстрее чем Arrays.sort() " + b;
+        }
     }
 }
