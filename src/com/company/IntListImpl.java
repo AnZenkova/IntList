@@ -1,25 +1,36 @@
 package com.company;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class IntListImpl<E> implements IntList{
 
     private Integer[] array = new Integer[10];
-    private int size = size();
 
-    public Integer[] generateArray() { // создаю публичный т.к. хочу сделать проверку в мейне.
-        Integer[] arr = generateRandomArray();
-        return arr;
+    private int size = 0;
+    public IntListImpl(Integer[] array, int size) {
+        this.array = array;
+        this.size = size;
     }
 
-    private static Integer[] generateRandomArray() {
+    public Integer[] getArray() {
+        return array;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public IntListImpl<Integer> generateArray() {
+        return generateRandomArray();
+    }
+
+    private static IntListImpl<Integer> generateRandomArray() {
         java.util.Random random = new java.util.Random();
         Integer[] arr = new Integer[100_000];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = random.nextInt(100_000) + 100_000;
         }
-        return arr;
+        return new IntListImpl<Integer>(arr,arr.length);
     }
 
     @Override
@@ -34,7 +45,7 @@ public class IntListImpl<E> implements IntList{
 
     @Override
     public Integer add(int index, Integer item) {
-        if (index >= array.length) {
+        if (index >= size) {
             throw new IndexLargerSizeOfArrayException("Значение индекса " + index + " больше чем размер массива!");
         } else {
             array[index] = item;
@@ -47,7 +58,7 @@ public class IntListImpl<E> implements IntList{
     public Integer set(int index, Integer item) {
         if (index >= array.length) {
             throw new IndexLargerSizeOfArrayException("Значение индекса " + index + " больше чем размер массива!");
-        } else if (array[index] == 0) {
+        } else if (array[index] == null) {
             throw new NullElementInTheArray("В ячейке " + index + " отсутсвует оъект, примените метод add()");
         } else {
             array[index] = item;
@@ -59,7 +70,7 @@ public class IntListImpl<E> implements IntList{
     public Integer removeIt(Integer item) {
         for (int i = 0; i < array.length; i++) {
             if (array[i] == item) {
-                array[i] = 0;
+                array[i] = null;
                 size--;
                 return Integer.parseInt(item + ": Удален");
             }
@@ -70,11 +81,11 @@ public class IntListImpl<E> implements IntList{
     @Override
     public Integer remove(int index) {
         int number;
-        if (array[index] == 0) {
+        if (array[index] == null) {
             throw new NullElementInTheArray("В ячейке под индесом " + index + " null");
         } else {
             number = array[index];
-            array[index] = 0;
+            array[index] = null;
             size--;
         }
         return Integer.parseInt("Элемент: " + number + " под индексом " + index + " удален");
@@ -85,7 +96,7 @@ public class IntListImpl<E> implements IntList{
         Integer[] arr = array;
         sort(arr);
         Integer element = searchBin(array, item);
-        if (element != 0) {
+        if (element != null) {
             return true;
         } else {
             return false;
@@ -129,14 +140,10 @@ public class IntListImpl<E> implements IntList{
         } else if (array.length != otherList.size()) {
             return false;
         } else {
-            int eL = 0;
             for (int i = 0; i < array.length; i++) {
-                if (array[i] == otherList.get(i)) {
-                    eL++;
+                if (array[i] != otherList.get(i)) {
+                    return false;
                 }
-            }
-            if (eL == size) {
-                return result;
             }
         }
         return result;
@@ -155,18 +162,18 @@ public class IntListImpl<E> implements IntList{
     @Override
     public void clear() {
         for (int i = 0; i < array.length; i++) {
-            array[i] = 0;
+            array[i] = null;
         }
         size = 0;
     }
 
     @Override
     public Integer[] toArray() {
-        Integer[] array = new Integer[10];
-        return array;
+        return Arrays.copyOf(array, size);
     }
 
-    private void sort(Integer[] arr) {
+    @Override
+    public void sort(Integer[] arr) {
         for (int i = arr.length - 1; i > 0; i--) {
             int maxEl = Integer.MIN_VALUE;
             int index = 0;
@@ -196,25 +203,30 @@ public class IntListImpl<E> implements IntList{
                 min = mid + 1;
             }
         }
-        return Integer.parseInt("Данный элемент, не найден");
+        throw new NullElementInTheArray("Данный элемент в массиве не найден");
     }
 
-    public String comparisonOfSort() {
+    public void sortBubble(Integer[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int a = arr[j + 1];
+                    arr[j + 1] = arr[j];
+                    arr[j] = a;
+                }
+            }
+        }
+    }
 
-        Integer[] arr = generateRandomArray();
-        Integer[] arr2 = arr;
-        long start = System.currentTimeMillis();
-        sort(arr);
-        long a = System.currentTimeMillis() - start;
-
-        long start1 = System.currentTimeMillis();
-        Arrays.sort(arr2);
-        long b = System.currentTimeMillis() - start1;
-
-        if (a > b) {
-            return "Arrays.sort() " + b + " быстрее чем sort() " + a;
-        } else {
-            return "sort() " + a + " быстрее чем Arrays.sort() " + b;
+    public void sortInsertion(Integer[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            Integer temp = arr[i];
+            Integer j = i;
+            while (j > 0 && arr[j - 1] >= temp) {
+                arr[j] = arr[j - 1];
+                j--;
+            }
+            arr[j] = temp;
         }
     }
 }

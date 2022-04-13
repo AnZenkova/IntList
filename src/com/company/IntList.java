@@ -16,6 +16,11 @@ public interface IntList {
     boolean isEmpty();
     void clear();
     Integer[] toArray();
-    Integer[] generateArray();
-    String comparisonOfSort();
+    IntList generateArray();
+
+    void sort(Integer[] arr);
+
+    void sortBubble(Integer[] arr);
+
+    void sortInsertion(Integer[] arr);
 }
