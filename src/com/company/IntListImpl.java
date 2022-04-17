@@ -33,10 +33,17 @@ public class IntListImpl<E> implements IntList{
         return new IntListImpl<Integer>(arr,arr.length);
     }
 
+    private Integer[] grow() {
+        Integer[] array2 = new Integer[array.length + (array.length / 2)];
+        System.arraycopy(array, 0, array2, 0, array2.length);
+        array = array2;
+        return array;
+    }
+
     @Override
     public Integer add(Integer item) {
         if (size == array.length) {
-            return Integer.parseInt("Массив уже заполнен элементами");
+            grow();
         }
         array[size] = item;
         size++;
@@ -45,7 +52,9 @@ public class IntListImpl<E> implements IntList{
 
     @Override
     public Integer add(int index, Integer item) {
-        if (index >= size) {
+        if (size == array.length) {
+            grow();
+        } else if (index >= size) {
             throw new IndexLargerSizeOfArrayException("Значение индекса " + index + " больше чем размер массива!");
         } else {
             array[index] = item;
@@ -183,10 +192,14 @@ public class IntListImpl<E> implements IntList{
                     index = j;
                 }
             }
-            int a = arr[i];
-            arr[i] = maxEl;
-            arr[index] = a;
+            swapElements(arr, i, index);
         }
+    }
+
+    private static void swapElements(Integer[] arr, int i, int j) {
+        int a = arr[i];
+        arr[i] = arr[j];
+        arr[j] = a;
     }
 
     private Integer searchBin(Integer[] array, int element) {
@@ -206,6 +219,7 @@ public class IntListImpl<E> implements IntList{
         throw new NullElementInTheArray("Данный элемент в массиве не найден");
     }
 
+    @Override
     public void sortBubble(Integer[] arr) {
         for (int i = 0; i < arr.length - 1; i++) {
             for (int j = 0; j < arr.length - 1 - i; j++) {
@@ -218,6 +232,7 @@ public class IntListImpl<E> implements IntList{
         }
     }
 
+    @Override
     public void sortInsertion(Integer[] arr) {
         for (int i = 1; i < arr.length; i++) {
             Integer temp = arr[i];
@@ -227,6 +242,49 @@ public class IntListImpl<E> implements IntList{
                 j--;
             }
             arr[j] = temp;
+        }
+    }
+
+    @Override
+    public void mergeSort(Integer[] arr) {
+            if (arr.length < 2) {
+                return;
+            }
+            int mid = arr.length / 2;
+            Integer[] left = new Integer[mid];
+            Integer[] right = new Integer[arr.length - mid];
+
+            for (int i = 0; i < left.length; i++) {
+                left[i] = arr[i];
+            }
+
+            for (int i = 0; i < right.length; i++) {
+                right[i] = arr[mid + i];
+            }
+
+            mergeSort(left);
+            mergeSort(right);
+
+            merge(arr, left, right);
+        }
+
+    public static void merge(Integer[] arr, Integer[] left, Integer[] right) {
+
+        int mainP = 0;
+        int leftP = 0;
+        int rightP = 0;
+        while (leftP < left.length && rightP < right.length) {
+            if (left[leftP] <= right[rightP]) {
+                arr[mainP++] = left[leftP++];
+            } else {
+                arr[mainP++] = right[rightP++];
+            }
+        }
+        while (leftP < left.length) {
+            arr[mainP++] = left[leftP++];
+        }
+        while (rightP < right.length) {
+            arr[mainP++] = right[rightP++];
         }
     }
 }

@@ -67,4 +67,23 @@ public class ComparisonOfSorts {
             return "sortInsertion() " + a + " быстрее чем Arrays.sort() " + b;
         }
     }
+
+    public String comparisonMergeSort() {
+
+        IntListImpl<Integer> arr = (IntListImpl<Integer>) intList.generateArray();
+        IntListImpl<Integer> arr2 = new IntListImpl<>(arr.getArray(), arr.getSize());
+        long start = System.currentTimeMillis();
+        intList.mergeSort(arr.getArray());
+        long a = System.currentTimeMillis() - start;
+
+        long start1 = System.currentTimeMillis();
+        Arrays.sort(arr2.getArray());
+        long b = System.currentTimeMillis() - start1;
+
+        if (a > b) {
+            return "Arrays.sort() " + b + " быстрее чем sort() " + a;
+        } else {
+            return "sortInsertion() " + a + " быстрее чем Arrays.sort() " + b;
+        }
+    }
 }

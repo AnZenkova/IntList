@@ -17,10 +17,11 @@ public interface IntList {
     void clear();
     Integer[] toArray();
     IntList generateArray();
-
     void sort(Integer[] arr);
 
     void sortBubble(Integer[] arr);
 
     void sortInsertion(Integer[] arr);
+
+    void mergeSort(Integer[] arr);
 }
